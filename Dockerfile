@@ -4,6 +4,10 @@ RUN apk add --no-cache git ca-certificates mailcap
 
 WORKDIR /app
 
+COPY go.* .
+
+RUN go mod download
+
 COPY . .
 
 # The image should be built with
