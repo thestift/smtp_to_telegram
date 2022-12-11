@@ -7,9 +7,9 @@ build:
 	make push ACTION=load PLATFORMS=linux/amd64
 
 push:
-	
 	docker buildx build \
 				--platform $(PLATFORMS) \
-				-t $(REPO):base-$(TARGET)$(SUFFIX) \
+				-t $(REPO):$(VERSION) \
+				-t $(REPO):latest \
 				--build-arg ST_VERSION=$(VERSION) \
 				--$(ACTION) .
