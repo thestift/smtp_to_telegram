@@ -18,14 +18,13 @@ builds:
     goarm:
       - '7'
     ldflags:
-      - -s -w
+      - -s -w -X main.Version={{.Version}}
 
 snapshot:
   name_template: "{{ .Tag }}-next"
 
 dockers:
-  - 
-    &xdocker
+  - &xdocker
     image_templates:
       - fopina/{{ .ProjectName }}:{{ .Version }}-amd64
     dockerfile: Dockerfile.release
