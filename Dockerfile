@@ -4,7 +4,8 @@ RUN apk add --no-cache git ca-certificates mailcap
 
 WORKDIR /app
 
-COPY go.* .
+COPY go.mod .
+COPY go.sum .
 
 RUN go mod download
 
