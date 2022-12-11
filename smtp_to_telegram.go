@@ -109,7 +109,6 @@ func main() {
 		} else {
 			telegramBotToken = c.String("telegram-bot-token")
 		}
-		fmt.Println(telegramBotToken)
 		smtpMaxEnvelopeSize, err := units.FromHumanSize(c.String("smtp-max-envelope-size"))
 		if err != nil {
 			fmt.Printf("%s\n", err)
