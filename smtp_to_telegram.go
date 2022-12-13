@@ -39,6 +39,7 @@ type SmtpConfig struct {
 	smtpListen          string
 	smtpPrimaryHost     string
 	smtpMaxEnvelopeSize int64
+	logLevel            string
 }
 
 type TelegramConfig struct {
@@ -118,6 +119,7 @@ func main() {
 			smtpListen:          c.String("smtp-listen"),
 			smtpPrimaryHost:     c.String("smtp-primary-host"),
 			smtpMaxEnvelopeSize: smtpMaxEnvelopeSize,
+			logLevel:            c.String("log-level"),
 		}
 		forwardedAttachmentMaxSize, err := units.FromHumanSize(c.String("forwarded-attachment-max-size"))
 		if err != nil {
@@ -178,9 +180,10 @@ func main() {
 			EnvVars: []string{"ST_TELEGRAM_BOT_TOKEN"},
 		},
 		&cli.StringFlag{
-			Name:    "telegram-bot-token-file",
-			Usage:   "Telegram: file containing bot token",
-			EnvVars: []string{"ST_TELEGRAM_BOT_TOKEN_FILE"},
+			Name:      "telegram-bot-token-file",
+			Usage:     "Telegram: file containing bot token",
+			TakesFile: true,
+			EnvVars:   []string{"ST_TELEGRAM_BOT_TOKEN_FILE"},
 		},
 		&cli.StringFlag{
 			Name:    "telegram-api-prefix",
@@ -232,6 +235,12 @@ func main() {
 			Value:   4095,
 			EnvVars: []string{"ST_MESSAGE_LENGTH_TO_SEND_AS_FILE"},
 		},
+		&cli.StringFlag{
+			Name:    "log-level",
+			Usage:   "Logging level (info, debug, error, panic).",
+			Value:   "info",
+			EnvVars: []string{"ST_LOG_LEVEL"},
+		},
 	}
 	err := app.Run(os.Args)
 	if err != nil {
@@ -243,7 +252,7 @@ func main() {
 func SmtpStart(
 	smtpConfig *SmtpConfig, telegramConfig *TelegramConfig) (guerrilla.Daemon, error) {
 
-	cfg := &guerrilla.AppConfig{LogFile: log.OutputStdout.String()}
+	cfg := &guerrilla.AppConfig{LogFile: log.OutputStdout.String(), LogLevel: smtpConfig.logLevel}
 
 	cfg.AllowedHosts = []string{"."}
 
